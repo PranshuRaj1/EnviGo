@@ -10,7 +10,6 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 import * as Location from "expo-location";
-import User from "./src/User";
 
 const App = () => {
   const [name, setName] = useState("");
@@ -21,19 +20,7 @@ const App = () => {
   const [isChecked, setChecked] = useState(false);
   const [bpisChecked, setBpisChecked] = useState(false);
   const [location, setLocation] = useState();
-  const [city, setCity] = useState();
-  const [district, setDistrict] = useState();
 
-  //create a bmi calculator which takes in height and weight and returns a number 1 if the person is obese else 0
-  const bmiCalculator = (height) => {
-    const bmi = weight / (height * height);
-    console.log(bmi);
-    if (bmi > 30) {
-      return 1;
-    } else {
-      return 0;
-    }
-  };
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -44,39 +31,11 @@ const App = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
-
-      reverseGeoCode(currentLocation);
+      console.log("Location:");
+      console.log(currentLocation);
     };
     getPermissions();
   }, []);
-
-  const reverseGeoCode = async () => {
-    const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
-      longitude: location.coords.longitude,
-      latitude: location.coords.latitude,
-    });
-
-    const cit = reverseGeocodedAddress[0].city;
-    const distric = reverseGeocodedAddress[0].district;
-
-    console.log(cit);
-    console.log(distric);
-    setCity(cit);
-    setDistrict(distric);
-    weatherApi();
-  };
-
-  //http://api.weatherapi.com/v1/current.json?key=dba9085ed1dc4dc2aa7175959241702&q=Pune&aqi=yes
-  const weatherApi = async () => {
-    const url = `http://api.weatherapi.com/v1/current.json?key=dba9085ed1dc4dc2aa7175959241702&q=${city}&aqi=yes`;
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
-    //log pm2_5 and temp_c
-
-    console.log(data.current.air_quality.pm2_5);
-    console.log(data.current.temp_c);
-  };
 
   const handleToggleSwitch = () => {
     setChecked((previousState) => !previousState);
@@ -88,9 +47,6 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>EnviGo</Text>
-      <Text style={styles.label}>
-        {district},{city}
-      </Text>
 
       <Text style={styles.label}>Name:</Text>
       <TextInput
@@ -109,7 +65,7 @@ const App = () => {
         placeholder="Enter your age"
       />
 
-      <Text style={styles.label}>Height (m):</Text>
+      <Text style={styles.label}>Height (cm):</Text>
       <TextInput
         style={styles.input}
         onChangeText={(text) => setHeight(text)}
@@ -149,23 +105,7 @@ const App = () => {
         <Switch value={bpisChecked} onValueChange={handleToggleSwitch2} />
       </View>
 
-      <Button
-        title="Submit"
-        onPress={() =>
-          //onPress log the bmiCalculator function
-          User(
-            name,
-            age,
-            height,
-            weight,
-            gender,
-            isChecked,
-            bpisChecked,
-            location
-          )
-        }
-      />
-      {console.log(bmiCalculator(height))}
+      <Button title="Submit" />
     </View>
   );
 };
