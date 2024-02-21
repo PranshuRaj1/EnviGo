@@ -25,6 +25,9 @@ const App = () => {
   const [district, setDistrict] = useState();
 
   //create a bmi calculator which takes in height and weight and returns a number 1 if the person is obese else 0
+  //UI can be better
+  // repeated BMI calculation
+  //not connected to database
   const bmiCalculator = (height) => {
     const bmi = weight / (height * height);
     console.log(bmi);
