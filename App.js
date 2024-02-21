@@ -8,6 +8,9 @@ import {
   Switch,
 } from "react-native";
 
+console.log("hello");
+
+
 import { Picker } from "@react-native-picker/picker";
 import * as Location from "expo-location";
 import User from "./src/User";
